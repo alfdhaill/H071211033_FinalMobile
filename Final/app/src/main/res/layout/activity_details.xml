@@ -79,12 +79,13 @@
                             android:id="@+id/mtv_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_4sdp"
                             android:text="@string/title"
                             android:textAppearance="?attr/textAppearanceTitleMedium"
                             android:textColor="@color/textColor"
                             android:textSize="@dimen/_13ssp"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toBottomOf="@+id/iv_content_type" />
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/mtv_date"
@@ -102,7 +103,7 @@
                             android:id="@+id/imageView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_6sdp"
+                            android:layout_marginTop="@dimen/_7sdp"
                             android:src="@drawable/round_star_rate_24"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/mtv_date" />
@@ -125,19 +126,17 @@
                             android:layout_height="wrap_content"
                             android:button="@drawable/sl_favorite"
                             app:buttonTint="?colorPrimary"
-                            app:layout_constraintBottom_toBottomOf="@+id/mtv_title"
+                            app:layout_constraintBottom_toBottomOf="@+id/imageView"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="@+id/iv_content_type"
-                            app:layout_constraintTop_toTopOf="@+id/mtv_title" />
+                            app:layout_constraintTop_toTopOf="@+id/imageView" />
 
                         <ImageView
                             android:id="@+id/iv_content_type"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:scaleType="centerCrop"
-                            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/imageView" />
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
             </LinearLayout>
