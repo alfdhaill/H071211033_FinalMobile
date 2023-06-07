@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">H071211033 - Final Mobile</string>
+    <string name="movies">Movies</string>
+    <string name="tv_shows">TV Shows</string>
+    <string name="favorites">Favorites</string>
+    <string name="title">Title</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="synopsis">Synopsis</string>
+    <string name="retry">Retry</string>
+    <string name="is_added">is added to favorites</string>
+    <string name="is_removed">is removed from favorites</string>
+</resources>
