@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 
@@ -14,7 +13,6 @@ import com.example.afinal.database.ContentHelper;
 import com.example.afinal.database.DatabaseContract;
 import com.example.afinal.models.MoviesResponse;
 import com.example.afinal.models.TvshowsResponse;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -30,6 +28,18 @@ public class DetailsActivity extends AppCompatActivity {
     public static final String TYPE_TV_SHOW = "tv_show";
     private ContentHelper contentHelper;
 
+    private MaterialTextView mtvTitle;
+    private MaterialTextView mtvDate;
+    private MaterialTextView mtvSynopsis;
+    private MaterialTextView mtvRating;
+    private ImageView ivBackdrop;
+    private ImageView ivPoster;
+    private ImageView ivContentType;
+    private CheckBox checkBox;
+
+    private SimpleDateFormat inputFormat;
+    private SimpleDateFormat outputFormat;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,175 +50,170 @@ public class DetailsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        Date date;
-        String type = getIntent().getStringExtra(EXTRA_TYPE);
         contentHelper = ContentHelper.getInstance(getApplicationContext());
         contentHelper.open();
 
-        MaterialTextView mtvTitle = findViewById(R.id.mtv_title);
-        MaterialTextView mtvDate = findViewById(R.id.mtv_date);
-        MaterialTextView mtvSynopsis = findViewById(R.id.mtv_synopsis);
-        MaterialTextView mtvRating = findViewById(R.id.mtv_vote_average);
-        ImageView ivBackdrop = findViewById(R.id.iv_backdrop);
-        ImageView ivPoster = findViewById(R.id.iv_poster);
-        ImageView ivContentType = findViewById(R.id.iv_content_type);
-        CheckBox checkBox = findViewById(R.id.cb);
+        mtvTitle = findViewById(R.id.mtv_title);
+        mtvDate = findViewById(R.id.mtv_date);
+        mtvSynopsis = findViewById(R.id.mtv_synopsis);
+        mtvRating = findViewById(R.id.mtv_vote_average);
+        ivBackdrop = findViewById(R.id.iv_backdrop);
+        ivPoster = findViewById(R.id.iv_poster);
+        ivContentType = findViewById(R.id.iv_content_type);
+        checkBox = findViewById(R.id.cb);
 
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        SimpleDateFormat outputFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault());
+        inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        outputFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault());
+
+        String type = getIntent().getStringExtra(EXTRA_TYPE);
 
         if (TYPE_MOVIE.equals(type)) {
-
-            MoviesResponse moviesResponse = getIntent().getParcelableExtra(TYPE_MOVIE);
-            String posterUrl = "https://image.tmdb.org/t/p/w500" + moviesResponse.getPosterPath();
-            String backdropUrl = "https://image.tmdb.org/t/p/w500" + moviesResponse.getBackdropPath();
-            try {
-                date = inputFormat.parse(moviesResponse.getReleaseYear());
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-            assert date != null;
-            String outputDateStr = outputFormat.format(date);
-
-                Glide.with(DetailsActivity.this)
-                        .load(posterUrl)
-                        .into(ivPoster);
-                Glide.with(DetailsActivity.this)
-                        .load(backdropUrl)
-                        .into(ivBackdrop);
-
-
-
-            mtvTitle.setText(moviesResponse.getTitle());
-            mtvDate.setText(outputDateStr);
-            mtvSynopsis.setText(moviesResponse.getSynopsis());
-            mtvRating.setText(moviesResponse.getVoteAverage().toString());
-            Glide.with(this)
-                    .load(moviesResponse.getContentType())
-                    .into(ivContentType);
-
-            Cursor cursor = contentHelper.queryById(moviesResponse.getId());
-
-            checkBox.setChecked(cursor.getCount() > 0);
-            cursor.close();
-
-            checkBox.setOnClickListener(v -> {
-
-                if (checkBox.isChecked()) {
-
-                    int id = moviesResponse.getId();
-                    String title = moviesResponse.getTitle();
-                    Float voteAverage = moviesResponse.getVoteAverage();
-                    String synopsis = moviesResponse.getSynopsis();
-                    String releaseYear = moviesResponse.getReleaseYear();
-                    String posterPath = moviesResponse.getPosterPath();
-                    String backdropPath = moviesResponse.getBackdropPath();
-                    int contentType = moviesResponse.getContentType();
-                    ContentValues values = new ContentValues();
-
-                    values.put(DatabaseContract.ContentColumns.ID, id);
-                    values.put(DatabaseContract.ContentColumns.TITLE, title);
-                    values.put(DatabaseContract.ContentColumns.VOTE_AVERAGE, voteAverage);
-                    values.put(DatabaseContract.ContentColumns.OVERVIEW, synopsis);
-                    values.put(DatabaseContract.ContentColumns.RELEASE_YEAR, releaseYear);
-                    values.put(DatabaseContract.ContentColumns.POSTER_PATH, posterPath);
-                    values.put(DatabaseContract.ContentColumns.BACKDROP_PATH, backdropPath);
-                    values.put(DatabaseContract.ContentColumns.CONTENT_TYPE, contentType);
-
-                    contentHelper.insert(values);
-
-                    Snackbar.make(findViewById(android.R.id.content),
-                            moviesResponse.getTitle() + " " + getString(R.string.is_added),
-                            Snackbar.LENGTH_SHORT).show();
-                } else {
-
-                    contentHelper.deleteById(String.valueOf(moviesResponse.getId()));
-
-                    Snackbar.make(findViewById(android.R.id.content),
-                            moviesResponse.getTitle() + " " + getString(R.string.is_removed),
-                            Snackbar.LENGTH_SHORT).show();
-                }
-            });
-
+            setupDetailsForMovie();
         } else if (TYPE_TV_SHOW.equals(type)) {
-
-            TvshowsResponse tvshowsResponse = getIntent().getParcelableExtra(TYPE_TV_SHOW);
-            Cursor cursor = contentHelper.queryById(tvshowsResponse.getId());
-            String posterUrl = "https://image.tmdb.org/t/p/w500" + tvshowsResponse.getPosterPath();
-            String backdropUrl = "https://image.tmdb.org/t/p/w500" + tvshowsResponse.getBackdropPath();
-            try {
-                date = inputFormat.parse(tvshowsResponse.getAirYear());
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-            assert date != null;
-            String outputDateStr = outputFormat.format(date);
-
-            checkBox.setChecked(cursor.getCount() > 0);
-
-            cursor.close();
-
-                Glide.with(DetailsActivity.this)
-                        .load(posterUrl)
-                        .into(ivPoster);
-                Glide.with(DetailsActivity.this)
-                        .load(backdropUrl)
-                        .into(ivBackdrop);
-
-
-
-            mtvTitle.setText(tvshowsResponse.getName());
-            mtvDate.setText(outputDateStr);
-            mtvSynopsis.setText(tvshowsResponse.getSynopsis());
-            mtvRating.setText(tvshowsResponse.getVoteAverage().toString());
-            ivContentType.setImageResource(tvshowsResponse.getContentType());
-            Glide.with(this)
-                    .load(tvshowsResponse.getContentType())
-                    .into(ivContentType);
-
-
-
-            checkBox.setOnClickListener(v -> {
-
-                if (checkBox.isChecked()) {
-
-                    int id = tvshowsResponse.getId();
-                    String name = tvshowsResponse.getName();
-                    Float voteAverage = tvshowsResponse.getVoteAverage();
-                    String synopsis = tvshowsResponse.getSynopsis();
-                    String firstAirYear = tvshowsResponse.getAirYear();
-                    String posterPath = tvshowsResponse.getPosterPath();
-                    String backdropPath = tvshowsResponse.getBackdropPath();
-                    int contentType = tvshowsResponse.getContentType();
-                    ContentValues values = new ContentValues();
-
-                    values.put(DatabaseContract.ContentColumns.ID, id);
-                    values.put(DatabaseContract.ContentColumns.TITLE, name);
-                    values.put(DatabaseContract.ContentColumns.VOTE_AVERAGE, voteAverage);
-                    values.put(DatabaseContract.ContentColumns.OVERVIEW, synopsis);
-                    values.put(DatabaseContract.ContentColumns.RELEASE_YEAR, firstAirYear);
-                    values.put(DatabaseContract.ContentColumns.POSTER_PATH, posterPath);
-                    values.put(DatabaseContract.ContentColumns.BACKDROP_PATH, backdropPath);
-                    values.put(DatabaseContract.ContentColumns.CONTENT_TYPE, contentType);
-
-                    contentHelper.insert(values);
-
-                    Snackbar.make(findViewById(android.R.id.content),
-                            tvshowsResponse.getName() + " " + getString(R.string.is_added),
-                            Snackbar.LENGTH_SHORT).show();
-                } else {
-
-                    contentHelper.deleteById(String.valueOf(tvshowsResponse.getId()));
-
-                    Snackbar.make(findViewById(android.R.id.content),
-                            tvshowsResponse.getName() + " " + getString(R.string.is_removed),
-                            Snackbar.LENGTH_SHORT).show();
-                }
-            });
+            setupDetailsForTvShow();
         }
 
         contentHelper.close();
+    }
 
+    private void setupDetailsForMovie() {
+        MoviesResponse moviesResponse = getIntent().getParcelableExtra(TYPE_MOVIE);
+        setMovieDetails(moviesResponse);
+
+        checkBox.setChecked(isContentSaved(moviesResponse.getId()));
+
+        checkBox.setOnClickListener(v -> {
+            if (checkBox.isChecked()) {
+                saveMovie(moviesResponse);
+                showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.is_added));
+            } else {
+                deleteContent(moviesResponse.getId());
+                showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.is_removed));
+            }
+        });
+    }
+
+    private void setupDetailsForTvShow() {
+        TvshowsResponse tvshowsResponse = getIntent().getParcelableExtra(TYPE_TV_SHOW);
+        setTvshowsDetails(tvshowsResponse);
+
+        checkBox.setChecked(isContentSaved(tvshowsResponse.getId()));
+
+        checkBox.setOnClickListener(v -> {
+            if (checkBox.isChecked()) {
+                saveTvshow(tvshowsResponse);
+                showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.is_added));
+            } else {
+                deleteContent(tvshowsResponse.getId());
+                showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.is_removed));
+            }
+        });
+    }
+
+    private void setMovieDetails(MoviesResponse response) {
+        String posterUrl = "https://image.tmdb.org/t/p/w500" + response.getPosterPath();
+        String backdropUrl = "https://image.tmdb.org/t/p/w500" + response.getBackdropPath();
+        Date date = parseDate(response.getReleaseYear());
+
+        mtvTitle.setText(response.getTitle());
+        mtvDate.setText(formatDate(date));
+        mtvSynopsis.setText(response.getSynopsis());
+        mtvRating.setText(response.getVoteAverage().toString());
+        loadImage(posterUrl, ivPoster);
+        loadImage(backdropUrl, ivBackdrop);
+        loadImage(response.getContentType(), ivContentType);
+    }
+
+    private void setTvshowsDetails(TvshowsResponse response) {
+        String posterUrl = "https://image.tmdb.org/t/p/w500" + response.getPosterPath();
+        String backdropUrl = "https://image.tmdb.org/t/p/w500" + response.getBackdropPath();
+        Date date = parseDate(response.getAirYear());
+
+        mtvTitle.setText(response.getName());
+        mtvDate.setText(formatDate(date));
+        mtvSynopsis.setText(response.getSynopsis());
+        mtvRating.setText(response.getVoteAverage().toString());
+        loadImage(posterUrl, ivPoster);
+        loadImage(backdropUrl, ivBackdrop);
+        loadImage(response.getContentType(), ivContentType);
+    }
+
+    private Date parseDate(String dateString) {
+        try {
+            return inputFormat.parse(dateString);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String formatDate(Date date) {
+        return outputFormat.format(date);
+    }
+
+    private void loadImage(String imageUrl, ImageView imageView) {
+        Glide.with(this)
+                .load(imageUrl)
+                .into(imageView);
+    }
+
+    private void loadImage(int resourceId, ImageView imageView) {
+        Glide.with(this)
+                .load(resourceId)
+                .into(imageView);
+    }
+
+    private boolean isContentSaved(int id) {
+        Cursor cursor = contentHelper.queryById(id);
+        int count = cursor.getCount();
+        cursor.close();
+        return count > 0;
+    }
+
+    private void saveMovie(MoviesResponse response) {
+        ContentValues values = getMoviesValues(response);
+        contentHelper.insert(values);
+    }
+
+    private void saveTvshow(TvshowsResponse response) {
+        ContentValues values = getTvshowValues(response);
+        contentHelper.insert(values);
+    }
+
+    private void deleteContent(int id) {
+        contentHelper.deleteById(String.valueOf(id));
+    }
+
+    private ContentValues getMoviesValues(MoviesResponse response) {
+
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.ContentColumns.ID, response.getId());
+        values.put(DatabaseContract.ContentColumns.TITLE, response.getTitle());
+        values.put(DatabaseContract.ContentColumns.VOTE_AVERAGE, response.getVoteAverage());
+        values.put(DatabaseContract.ContentColumns.OVERVIEW, response.getSynopsis());
+        values.put(DatabaseContract.ContentColumns.RELEASE_YEAR, response.getReleaseYear());
+        values.put(DatabaseContract.ContentColumns.POSTER_PATH, response.getPosterPath());
+        values.put(DatabaseContract.ContentColumns.BACKDROP_PATH, response.getBackdropPath());
+        values.put(DatabaseContract.ContentColumns.CONTENT_TYPE, response.getContentType());
+        return values;
+    }
+
+    private ContentValues getTvshowValues(TvshowsResponse response) {
+
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.ContentColumns.ID, response.getId());
+        values.put(DatabaseContract.ContentColumns.TITLE, response.getName());
+        values.put(DatabaseContract.ContentColumns.VOTE_AVERAGE, response.getVoteAverage());
+        values.put(DatabaseContract.ContentColumns.OVERVIEW, response.getSynopsis());
+        values.put(DatabaseContract.ContentColumns.RELEASE_YEAR, response.getAirYear());
+        values.put(DatabaseContract.ContentColumns.POSTER_PATH, response.getPosterPath());
+        values.put(DatabaseContract.ContentColumns.BACKDROP_PATH, response.getBackdropPath());
+        values.put(DatabaseContract.ContentColumns.CONTENT_TYPE, response.getContentType());
+        return values;
+    }
+
+    private void showSnackbar(String message) {
+
+        Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -218,3 +223,4 @@ public class DetailsActivity extends AppCompatActivity {
         return true;
     }
 }
+

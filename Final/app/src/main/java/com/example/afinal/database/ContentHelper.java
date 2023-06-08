@@ -71,9 +71,15 @@ public class ContentHelper {
     }
 
     public Cursor queryAll() {
+
+        String[] columns = {DatabaseContract.ContentColumns.TITLE,
+                DatabaseContract.ContentColumns.RELEASE_YEAR,
+                DatabaseContract.ContentColumns.CONTENT_TYPE,
+                DatabaseContract.ContentColumns.POSTER_PATH};
+
         return database.query(
                 DATABASE_TABLE,
-                null,
+                columns,
                 null,
                 null,
                 null,
@@ -85,12 +91,6 @@ public class ContentHelper {
     public long insert(ContentValues values) {
 
         return database.insert(DATABASE_TABLE, null, values);
-    }
-
-    public int update(String id, ContentValues values) {
-
-        return database.update(DATABASE_TABLE, values,
-                DatabaseContract.ContentColumns.ID + " = ?", new String[]{id});
     }
 
     public int deleteById(String id) {
