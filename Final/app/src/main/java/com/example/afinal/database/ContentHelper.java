@@ -2,6 +2,7 @@ package com.example.afinal.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -54,6 +55,31 @@ public class ContentHelper {
 
             database.close();
         }
+    }
+
+    public Cursor queryById(int id) {
+        return database.query(
+                DATABASE_TABLE,
+                null,
+                DatabaseContract.ContentColumns.ID + " = ?",
+                new String[]{String.valueOf(id)},
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    public Cursor queryAll() {
+        return database.query(
+                DATABASE_TABLE,
+                null,
+                null,
+                null,
+                null,
+                null,
+                DatabaseContract.ContentColumns.ID + " ASC"
+        );
     }
 
     public long insert(ContentValues values) {

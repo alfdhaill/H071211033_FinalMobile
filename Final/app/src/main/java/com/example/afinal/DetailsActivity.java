@@ -2,6 +2,8 @@ package com.example.afinal;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -9,6 +11,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.afinal.database.ContentHelper;
+import com.example.afinal.database.DatabaseContract;
 import com.example.afinal.models.MoviesResponse;
 import com.example.afinal.models.TvshowsResponse;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -25,6 +29,7 @@ public class DetailsActivity extends AppCompatActivity {
     public static final String EXTRA_TYPE = "extra_type";
     public static final String TYPE_MOVIE = "movie";
     public static final String TYPE_TV_SHOW = "tv_show";
+    private ContentHelper contentHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +38,13 @@ public class DetailsActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         Date date;
         String type = getIntent().getStringExtra(EXTRA_TYPE);
-        Handler handler = new Handler();
+        contentHelper = ContentHelper.getInstance(getApplicationContext());
+        contentHelper.open();
 
         LinearProgressIndicator lpi = findViewById(R.id.lpi);
         MaterialTextView mtvTitle = findViewById(R.id.mtv_title);
@@ -62,9 +69,8 @@ public class DetailsActivity extends AppCompatActivity {
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
+            assert date != null;
             String outputDateStr = outputFormat.format(date);
-
-            handler.postDelayed(() -> {
 
                 lpi.setVisibility(View.GONE);
                 Glide.with(DetailsActivity.this)
@@ -74,10 +80,6 @@ public class DetailsActivity extends AppCompatActivity {
                         .load(backdropUrl)
                         .into(ivBackdrop);
 
-                if (getSupportActionBar() != null) {
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                }
-            }, 1900);
 
 
             mtvTitle.setText(moviesResponse.getTitle());
@@ -88,14 +90,42 @@ public class DetailsActivity extends AppCompatActivity {
                     .load(moviesResponse.getContentType())
                     .into(ivContentType);
 
+            Cursor cursor = contentHelper.queryById(moviesResponse.getId());
+
+            checkBox.setChecked(cursor.getCount() > 0);
+            cursor.close();
+
             checkBox.setOnClickListener(v -> {
 
                 if (checkBox.isChecked()) {
+
+                    int id = moviesResponse.getId();
+                    String title = moviesResponse.getTitle();
+                    Float voteAverage = moviesResponse.getVoteAverage();
+                    String synopsis = moviesResponse.getSynopsis();
+                    String releaseYear = moviesResponse.getReleaseYear();
+                    String posterPath = moviesResponse.getPosterPath();
+                    String backdropPath = moviesResponse.getBackdropPath();
+                    int contentType = moviesResponse.getContentType();
+                    ContentValues values = new ContentValues();
+
+                    values.put(DatabaseContract.ContentColumns.ID, id);
+                    values.put(DatabaseContract.ContentColumns.TITLE, title);
+                    values.put(DatabaseContract.ContentColumns.VOTE_AVERAGE, voteAverage);
+                    values.put(DatabaseContract.ContentColumns.OVERVIEW, synopsis);
+                    values.put(DatabaseContract.ContentColumns.RELEASE_YEAR, releaseYear);
+                    values.put(DatabaseContract.ContentColumns.POSTER_PATH, posterPath);
+                    values.put(DatabaseContract.ContentColumns.BACKDROP_PATH, backdropPath);
+                    values.put(DatabaseContract.ContentColumns.CONTENT_TYPE, contentType);
+
+                    contentHelper.insert(values);
 
                     Snackbar.make(findViewById(android.R.id.content),
                             moviesResponse.getTitle() + " " + getString(R.string.is_added),
                             Snackbar.LENGTH_SHORT).show();
                 } else {
+
+                    contentHelper.deleteById(String.valueOf(moviesResponse.getId()));
 
                     Snackbar.make(findViewById(android.R.id.content),
                             moviesResponse.getTitle() + " " + getString(R.string.is_removed),
@@ -106,6 +136,7 @@ public class DetailsActivity extends AppCompatActivity {
         } else if (TYPE_TV_SHOW.equals(type)) {
 
             TvshowsResponse tvshowsResponse = getIntent().getParcelableExtra(TYPE_TV_SHOW);
+            Cursor cursor = contentHelper.queryById(tvshowsResponse.getId());
             String posterUrl = "https://image.tmdb.org/t/p/w500" + tvshowsResponse.getPosterPath();
             String backdropUrl = "https://image.tmdb.org/t/p/w500" + tvshowsResponse.getBackdropPath();
             try {
@@ -113,11 +144,13 @@ public class DetailsActivity extends AppCompatActivity {
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
+            assert date != null;
             String outputDateStr = outputFormat.format(date);
 
-            handler.postDelayed(() -> {
+            checkBox.setChecked(cursor.getCount() > 0);
 
-                lpi.setVisibility(View.GONE);
+            cursor.close();
+
                 Glide.with(DetailsActivity.this)
                         .load(posterUrl)
                         .into(ivPoster);
@@ -125,10 +158,6 @@ public class DetailsActivity extends AppCompatActivity {
                         .load(backdropUrl)
                         .into(ivBackdrop);
 
-                if (getSupportActionBar() != null) {
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                }
-            }, 1900);
 
 
             mtvTitle.setText(tvshowsResponse.getName());
@@ -140,14 +169,39 @@ public class DetailsActivity extends AppCompatActivity {
                     .load(tvshowsResponse.getContentType())
                     .into(ivContentType);
 
+
+
             checkBox.setOnClickListener(v -> {
 
                 if (checkBox.isChecked()) {
+
+                    int id = tvshowsResponse.getId();
+                    String name = tvshowsResponse.getName();
+                    Float voteAverage = tvshowsResponse.getVoteAverage();
+                    String synopsis = tvshowsResponse.getSynopsis();
+                    String firstAirYear = tvshowsResponse.getAirYear();
+                    String posterPath = tvshowsResponse.getPosterPath();
+                    String backdropPath = tvshowsResponse.getBackdropPath();
+                    int contentType = tvshowsResponse.getContentType();
+                    ContentValues values = new ContentValues();
+
+                    values.put(DatabaseContract.ContentColumns.ID, id);
+                    values.put(DatabaseContract.ContentColumns.TITLE, name);
+                    values.put(DatabaseContract.ContentColumns.VOTE_AVERAGE, voteAverage);
+                    values.put(DatabaseContract.ContentColumns.OVERVIEW, synopsis);
+                    values.put(DatabaseContract.ContentColumns.RELEASE_YEAR, firstAirYear);
+                    values.put(DatabaseContract.ContentColumns.POSTER_PATH, posterPath);
+                    values.put(DatabaseContract.ContentColumns.BACKDROP_PATH, backdropPath);
+                    values.put(DatabaseContract.ContentColumns.CONTENT_TYPE, contentType);
+
+                    contentHelper.insert(values);
 
                     Snackbar.make(findViewById(android.R.id.content),
                             tvshowsResponse.getName() + " " + getString(R.string.is_added),
                             Snackbar.LENGTH_SHORT).show();
                 } else {
+
+                    contentHelper.deleteById(String.valueOf(tvshowsResponse.getId()));
 
                     Snackbar.make(findViewById(android.R.id.content),
                             tvshowsResponse.getName() + " " + getString(R.string.is_removed),
@@ -155,6 +209,9 @@ public class DetailsActivity extends AppCompatActivity {
                 }
             });
         }
+
+        contentHelper.close();
+
     }
 
     @Override
