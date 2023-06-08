@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -46,7 +45,6 @@ public class DetailsActivity extends AppCompatActivity {
         contentHelper = ContentHelper.getInstance(getApplicationContext());
         contentHelper.open();
 
-        LinearProgressIndicator lpi = findViewById(R.id.lpi);
         MaterialTextView mtvTitle = findViewById(R.id.mtv_title);
         MaterialTextView mtvDate = findViewById(R.id.mtv_date);
         MaterialTextView mtvSynopsis = findViewById(R.id.mtv_synopsis);
@@ -72,7 +70,6 @@ public class DetailsActivity extends AppCompatActivity {
             assert date != null;
             String outputDateStr = outputFormat.format(date);
 
-                lpi.setVisibility(View.GONE);
                 Glide.with(DetailsActivity.this)
                         .load(posterUrl)
                         .into(ivPoster);

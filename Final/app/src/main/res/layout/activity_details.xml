@@ -9,18 +9,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/lpi"
-            android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:indeterminate="true"
-            app:indicatorColor="#0465C8"
-            app:trackColor="#5FB0F9"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_height="wrap_content">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/materialCardView"
