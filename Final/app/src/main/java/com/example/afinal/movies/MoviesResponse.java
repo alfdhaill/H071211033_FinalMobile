@@ -34,10 +34,17 @@ public class MoviesResponse implements Parcelable {
 
     private int contentType;
 
-    public MoviesResponse(int db_id, String title, String releaseYear, int contentType) {
+    public MoviesResponse(int id, String title, Float voteAverage, String synopsis,
+                          String releaseYear, String posterPath, String backdropPath,
+                          int contentType) {
+
+        this.id = id;
         this.title = title;
+        this.voteAverage = voteAverage;
+        this.synopsis = synopsis;
         this.releaseYear = releaseYear;
-        this.db_id = db_id;
+        this.posterPath = posterPath;
+        this.backdropPath = backdropPath;
         this.contentType = contentType;
     }
 

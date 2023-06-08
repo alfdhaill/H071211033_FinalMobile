@@ -63,13 +63,13 @@ public class ContentHelper {
 
     public int update(String id, ContentValues values) {
 
-        return database.update(DATABASE_TABLE, values, DatabaseContract.ContentColumns._ID
-                + " = ?", new String[]{id});
+        return database.update(DATABASE_TABLE, values,
+                DatabaseContract.ContentColumns.ID + " = ?", new String[]{id});
     }
 
     public int deleteById(String id) {
 
-        return database.delete(DATABASE_TABLE, DatabaseContract.ContentColumns._ID + " = "
+        return database.delete(DATABASE_TABLE, DatabaseContract.ContentColumns.ID + " = "
                 + id, null);
     }
 }

@@ -7,18 +7,26 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static String DATABASE_NAME = "Content.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String SQL_CREATE_TABLE_NOTE =
             String.format(
                     "CREATE TABLE %s"
-                            + " (%s INTEGER PRIMARY KEY AUTOINCREMENT,"
+                            + " (%s INTEGER PRIMARY KEY,"
+                            + " %s TEXT NOT NULL,"
+                            + " %s FLOAT NOT NULL,"
                             + " %s TEXT NOT NULL,"
                             + " %s TEXT NOT NULL,"
-                            + " %s TEXT NOT NULL)",
+                            + " %s TEXT NOT NULL,"
+                            + " %s TEXT NOT NULL,"
+                            + " %s INTEGER NOT NULL)",
                     DatabaseContract.TABLE_NAME,
-                    DatabaseContract.ContentColumns._ID,
+                    DatabaseContract.ContentColumns.ID,
                     DatabaseContract.ContentColumns.TITLE,
+                    DatabaseContract.ContentColumns.VOTE_AVERAGE,
+                    DatabaseContract.ContentColumns.OVERVIEW,
                     DatabaseContract.ContentColumns.RELEASE_YEAR,
+                    DatabaseContract.ContentColumns.POSTER_PATH,
+                    DatabaseContract.ContentColumns.BACKDROP_PATH,
                     DatabaseContract.ContentColumns.CONTENT_TYPE
 
             );

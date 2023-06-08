@@ -16,16 +16,39 @@ public class MappingHelper {
 
         while (cursor.moveToNext()) {
 
-            int dbId =
-                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseContract.ContentColumns._ID));
+            int id =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns._ID));
+
             String title =
-                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.ContentColumns.TITLE));
+                    cursor.getString(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns.TITLE));
+
+            Float voteAverage =
+                    cursor.getFloat(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns.VOTE_AVERAGE));
+
+            String synopsis =
+                    cursor.getString(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns.OVERVIEW));
+
             String releaseYear =
-                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.ContentColumns.RELEASE_YEAR));
+                    cursor.getString(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns.RELEASE_YEAR));
+
+            String posterPath =
+                    cursor.getString(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns.POSTER_PATH));
+
+            String backdropPath =
+                    cursor.getString(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns.BACKDROP_PATH));
+
             int contentType =
                     cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseContract.ContentColumns.CONTENT_TYPE));
 
-            moviesResponses.add(new MoviesResponse(dbId, title, releaseYear, contentType));
+            moviesResponses.add(new MoviesResponse(id, title, voteAverage, synopsis, releaseYear,
+                    posterPath, backdropPath, contentType));
         }
 
         return moviesResponses;
@@ -37,16 +60,39 @@ public class MappingHelper {
 
         while (cursor.moveToNext()) {
 
-            int dbId =
-                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseContract.ContentColumns._ID));
-            String title =
-                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.ContentColumns.TITLE));
-            String releaseYear =
-                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.ContentColumns.RELEASE_YEAR));
+            int id =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns._ID));
+
+            String name =
+                    cursor.getString(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns.TITLE));
+
+            Float voteAverage =
+                    cursor.getFloat(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns.VOTE_AVERAGE));
+
+            String synopsis =
+                    cursor.getString(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns.OVERVIEW));
+
+            String airYear =
+                    cursor.getString(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns.RELEASE_YEAR));
+
+            String posterPath =
+                    cursor.getString(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns.POSTER_PATH));
+
+            String backdropPath =
+                    cursor.getString(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns.BACKDROP_PATH));
+
             int contentType =
                     cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseContract.ContentColumns.CONTENT_TYPE));
 
-            tvshowsResponses.add(new TvshowsResponse(dbId, title, releaseYear, contentType));
+            tvshowsResponses.add(new TvshowsResponse(id, name, voteAverage, synopsis, airYear,
+                    posterPath, backdropPath, contentType));
         }
 
         return tvshowsResponses;
