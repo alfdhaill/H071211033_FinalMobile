@@ -1,4 +1,4 @@
-package com.example.afinal.movies;
+package com.example.afinal.adapters;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -13,37 +13,37 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.afinal.DetailsActivity;
 import com.example.afinal.R;
+import com.example.afinal.models.TvshowsResponse;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder>{
+public class TvshowsAdapter extends RecyclerView.Adapter<TvshowsAdapter.TvshowsViewHolder> {
 
-    private final List<MoviesResponse> moviesResponses;
+    private final List<TvshowsResponse> tvshowsResponses;
 
-    public MoviesAdapter(List<MoviesResponse> moviesResponses) {
-        this.moviesResponses = moviesResponses;
+    public TvshowsAdapter(List<TvshowsResponse> tvshowsResponses) {
+        this.tvshowsResponses = tvshowsResponses;
     }
-
 
     @NonNull
     @Override
-    public MoviesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MoviesViewHolder(LayoutInflater.from(parent.getContext()).
+    public TvshowsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new TvshowsAdapter.TvshowsViewHolder(LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.item_movies_tv_shows, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MoviesViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TvshowsViewHolder holder, int position) {
 
-        MoviesResponse moviesResponse = moviesResponses.get(position);
+        TvshowsResponse tvshowsResponse = tvshowsResponses.get(position);
 
-        String title = moviesResponse.getTitle();
-        String releaseYear = moviesResponse.getReleaseYear();
-        String posterPath = moviesResponse.getPosterPath();
+        String title = tvshowsResponse.getName();
+        String releaseYear = tvshowsResponse.getAirYear();
+        String posterPath = tvshowsResponse.getPosterPath();
         String imageUrl = "https://image.tmdb.org/t/p/w500" + posterPath;
 
-        moviesResponse.setContentType(R.drawable.baseline_movie_24);
+        tvshowsResponse.setContentType(R.drawable.baseline_tv_24);
 
         Glide.with(holder.itemView.getContext())
                 .load(imageUrl)
@@ -63,8 +63,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
             Intent intent = new Intent(v.getContext(), DetailsActivity.class);
 
-            intent.putExtra(DetailsActivity.TYPE_MOVIE, moviesResponse);
-            intent.putExtra(DetailsActivity.EXTRA_TYPE, DetailsActivity.TYPE_MOVIE);
+            intent.putExtra(DetailsActivity.TYPE_TV_SHOW, tvshowsResponse);
+            intent.putExtra(DetailsActivity.EXTRA_TYPE, DetailsActivity.TYPE_TV_SHOW);
 
             v.getContext().startActivity(intent);
         });
@@ -72,16 +72,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
     @Override
     public int getItemCount() {
-        return moviesResponses.size();
+        return tvshowsResponses.size();
     }
 
-    public static class MoviesViewHolder extends RecyclerView.ViewHolder{
+    public static class TvshowsViewHolder extends RecyclerView.ViewHolder{
 
         MaterialCardView materialCardView;
         ImageView imageView;
         TextView tvTitle, tvYearDate;
 
-        public MoviesViewHolder(@NonNull View itemView) {
+        public TvshowsViewHolder(@NonNull View itemView) {
             super(itemView);
 
             materialCardView = itemView.findViewById(R.id.mcv_movies_tv_shows);

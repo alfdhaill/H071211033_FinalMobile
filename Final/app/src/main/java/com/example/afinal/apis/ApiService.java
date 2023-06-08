@@ -1,11 +1,9 @@
 package com.example.afinal.apis;
 
 import com.example.afinal.movies.MoviesDataResponse;
-import com.example.afinal.movies.MoviesResponse;
 import com.example.afinal.responses.ListMoviesResponse;
 import com.example.afinal.responses.ListTvshowsResponse;
 import com.example.afinal.tvshows.TvshowsDataResponse;
-import com.example.afinal.tvshows.TvshowsResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

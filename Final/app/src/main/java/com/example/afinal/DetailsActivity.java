@@ -9,8 +9,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.example.afinal.movies.MoviesResponse;
-import com.example.afinal.tvshows.TvshowsResponse;
+import com.example.afinal.models.MoviesResponse;
+import com.example.afinal.models.TvshowsResponse;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;

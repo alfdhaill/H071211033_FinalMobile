@@ -14,11 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ProgressBar;
 
 import com.example.afinal.MainActivity;
 import com.example.afinal.R;
+import com.example.afinal.adapters.TvshowsAdapter;
 import com.example.afinal.apis.ApiConfig;
+import com.example.afinal.models.TvshowsResponse;
 import com.example.afinal.responses.ListTvshowsResponse;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;

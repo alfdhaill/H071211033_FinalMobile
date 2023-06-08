@@ -2,8 +2,8 @@ package com.example.afinal.database;
 
 import android.database.Cursor;
 
-import com.example.afinal.movies.MoviesResponse;
-import com.example.afinal.tvshows.TvshowsResponse;
+import com.example.afinal.models.MoviesResponse;
+import com.example.afinal.models.TvshowsResponse;
 
 import java.util.ArrayList;
 import java.util.List;

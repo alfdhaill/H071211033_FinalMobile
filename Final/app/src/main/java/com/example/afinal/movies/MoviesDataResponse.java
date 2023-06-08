@@ -1,9 +1,7 @@
 package com.example.afinal.movies;
 
-import com.example.afinal.movies.MoviesResponse;
+import com.example.afinal.models.MoviesResponse;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
 
 public class MoviesDataResponse {
 
