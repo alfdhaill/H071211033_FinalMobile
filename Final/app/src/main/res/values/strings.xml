@@ -9,4 +9,6 @@
     <string name="retry">Retry</string>
     <string name="is_added">is added to favorites</string>
     <string name="is_removed">is removed from favorites</string>
+    <string name="failed_add">failed to be added to favorites</string>
+    <string name="failed_remove">failed to be removed from favorites</string>
 </resources>

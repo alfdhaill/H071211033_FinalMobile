@@ -84,11 +84,23 @@ public class DetailsActivity extends AppCompatActivity {
 
         checkBox.setOnClickListener(v -> {
             if (checkBox.isChecked()) {
-                saveMovie(moviesResponse);
-                showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.is_added));
+
+                if (saveMovie(moviesResponse) > 0) {
+
+                    showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.is_added));
+                } else {
+
+                    showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.failed_add));
+                }
             } else {
-                deleteContent(moviesResponse.getId());
-                showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.is_removed));
+
+                if (deleteContent(moviesResponse.getId()) > 0) {
+
+                    showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.is_removed));
+                } else {
+
+                    showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.failed_remove));
+                }
             }
         });
     }
@@ -101,11 +113,23 @@ public class DetailsActivity extends AppCompatActivity {
 
         checkBox.setOnClickListener(v -> {
             if (checkBox.isChecked()) {
-                saveTvshow(tvshowsResponse);
-                showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.is_added));
+
+                if (saveTvshow(tvshowsResponse) > 0) {
+
+                    showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.is_added));
+                } else {
+
+                    showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.failed_add));
+                }
             } else {
-                deleteContent(tvshowsResponse.getId());
-                showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.is_removed));
+
+                if (deleteContent(tvshowsResponse.getId()) > 0) {
+
+                    showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.is_removed));
+                } else {
+
+                    showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.failed_remove));
+                }
             }
         });
     }
@@ -169,18 +193,21 @@ public class DetailsActivity extends AppCompatActivity {
         return count > 0;
     }
 
-    private void saveMovie(MoviesResponse response) {
+    private long saveMovie(MoviesResponse response) {
         ContentValues values = getMoviesValues(response);
-        contentHelper.insert(values);
+
+        return contentHelper.insert(values);
     }
 
-    private void saveTvshow(TvshowsResponse response) {
+    private long saveTvshow(TvshowsResponse response) {
         ContentValues values = getTvshowValues(response);
-        contentHelper.insert(values);
+
+        return contentHelper.insert(values);
     }
 
-    private void deleteContent(int id) {
-        contentHelper.deleteById(String.valueOf(id));
+    private long deleteContent(int id) {
+
+        return contentHelper.deleteById(String.valueOf(id));
     }
 
     private ContentValues getMoviesValues(MoviesResponse response) {
