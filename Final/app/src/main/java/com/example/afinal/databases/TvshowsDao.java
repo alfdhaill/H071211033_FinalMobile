@@ -1,5 +1,6 @@
-package com.example.afinal.database;
+package com.example.afinal.databases;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -17,6 +18,9 @@ public interface TvshowsDao {
 
     @Query("SELECT * FROM tvshowsresponse")
     List<TvshowsResponse> getAll();
+
+//    @Query("SELECT * FROM tvshowsresponse")
+//    LiveData<List<TvshowsResponse>> getAll();
 
     @Query("SELECT EXISTS (SELECT 1 FROM tvshowsresponse WHERE id = :id)")
     boolean isTvshowExists(int id);

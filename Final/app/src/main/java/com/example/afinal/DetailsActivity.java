@@ -7,7 +7,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.example.afinal.database.AppDatabase;
+import com.example.afinal.databases.AppDatabase;
 import com.example.afinal.models.MoviesResponse;
 import com.example.afinal.models.TvshowsResponse;
 import com.google.android.material.snackbar.Snackbar;
