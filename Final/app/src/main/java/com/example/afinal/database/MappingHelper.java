@@ -45,7 +45,8 @@ public class MappingHelper {
                             DatabaseContract.ContentColumns.BACKDROP_PATH));
 
             int contentType =
-                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseContract.ContentColumns.CONTENT_TYPE));
+                    cursor.getInt(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns.CONTENT_TYPE));
 
             moviesResponses.add(new MoviesResponse(id, title, voteAverage, synopsis, releaseYear,
                     posterPath, backdropPath, contentType));
@@ -89,7 +90,8 @@ public class MappingHelper {
                             DatabaseContract.ContentColumns.BACKDROP_PATH));
 
             int contentType =
-                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseContract.ContentColumns.CONTENT_TYPE));
+                    cursor.getInt(cursor.getColumnIndexOrThrow(
+                            DatabaseContract.ContentColumns.CONTENT_TYPE));
 
             tvshowsResponses.add(new TvshowsResponse(id, name, voteAverage, synopsis, airYear,
                     posterPath, backdropPath, contentType));
