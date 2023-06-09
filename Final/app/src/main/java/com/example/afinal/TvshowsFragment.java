@@ -49,6 +49,7 @@ public class TvshowsFragment extends Fragment {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
 
+            activity.getSupportActionBar().show();
             activity.getSupportActionBar().setTitle(getString(R.string.top_rated));
         }
 

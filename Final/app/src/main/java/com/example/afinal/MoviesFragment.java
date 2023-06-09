@@ -51,6 +51,8 @@ public class MoviesFragment extends Fragment {
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
+
+            activity.getSupportActionBar().show();
             activity.getSupportActionBar().setTitle(getString(R.string.now_playing));
         }
 
