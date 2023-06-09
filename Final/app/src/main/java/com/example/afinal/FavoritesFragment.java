@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.example.afinal.adapters.FavoritesAdapter;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.concurrent.ExecutorService;
@@ -22,6 +23,7 @@ public class FavoritesFragment extends Fragment {
 
     Handler handler;
     ExecutorService executorService;
+    FavoritesAdapter favoritesAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,14 +41,6 @@ public class FavoritesFragment extends Fragment {
             activity.getSupportActionBar().setTitle(getString(R.string.favorites));
         }
 
-        handler = new Handler();
-        LinearProgressIndicator lpi = view.findViewById(R.id.lpi);
         RecyclerView recyclerView = view.findViewById(R.id.rv_favorites);
-
-        recyclerView.setVisibility(View.INVISIBLE);
-        handler.postDelayed(()->{
-
-            recyclerView.setVisibility(View.VISIBLE);
-        }, 1100);
     }
 }

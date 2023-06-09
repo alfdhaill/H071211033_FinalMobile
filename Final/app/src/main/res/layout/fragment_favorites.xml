@@ -17,15 +17,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/lpi"
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:indeterminate="false"
-        app:indicatorColor="#1288FF"
-        app:trackColor="#56AFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
