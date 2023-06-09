@@ -29,10 +29,17 @@
             android:orientation="vertical"
             android:padding="@dimen/_11sdp">
 
+            <ImageView
+                android:id="@+id/iv_content_type"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:scaleType="centerCrop"/>
+
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:text="@string/title"
                 android:textSize="@dimen/_11ssp"
                 android:textColor="@color/textColor"
@@ -47,14 +54,6 @@
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?android:attr/textColorSecondary" />
 
-            <ImageView
-                android:id="@+id/iv_content_type"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:scaleType="centerCrop"
-                android:layout_marginTop="@dimen/_2sdp"
-                android:background="#747474"
-                android:layout_gravity="end"/>
         </LinearLayout>
     </LinearLayout>
 
