@@ -15,31 +15,31 @@ public class TvshowsResponse implements Parcelable {
 
     @PrimaryKey
     @SerializedName("id")
-    private int id;
+    private final int id;
 
     @ColumnInfo(name = "name")
     @SerializedName("name")
-    private String name;
+    private final String name;
 
     @ColumnInfo(name = "vote_average")
     @SerializedName("vote_average")
-    private Float voteAverage;
+    private final Float voteAverage;
 
     @ColumnInfo(name = "overview")
     @SerializedName("overview")
-    private String synopsis;
+    private final String synopsis;
 
     @ColumnInfo(name = "first_air_date")
     @SerializedName("first_air_date")
-    private String airYear;
+    private final String airYear;
 
     @ColumnInfo(name = "poster_path")
     @SerializedName("poster_path")
-    private String posterPath;
+    private final String posterPath;
 
     @ColumnInfo(name = "backdrop_path")
     @SerializedName("backdrop_path")
-    private String backdropPath;
+    private final String backdropPath;
 
     @ColumnInfo(name = "content_type")
     private int contentType;
@@ -61,60 +61,36 @@ public class TvshowsResponse implements Parcelable {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Float getVoteAverage() {
         return voteAverage;
     }
 
-    public void setVoteAverage(Float voteAverage) {
-        this.voteAverage = voteAverage;
-    }
-
     public String getSynopsis() {
         return synopsis;
-    }
-
-    public void setSynopsis(String synopsis) {
-        this.synopsis = synopsis;
     }
 
     public String getAirYear() {
         return airYear;
     }
 
-    public void setAirYear(String airYear) {
-        this.airYear = airYear;
-    }
-
     public String getPosterPath() {
         return posterPath;
-    }
-
-    public void setPosterPath(String posterPath) {
-        this.posterPath = posterPath;
     }
 
     public String getBackdropPath() {
         return backdropPath;
     }
 
-    public void setBackdropPath(String backdropPath) {
-        this.backdropPath = backdropPath;
-    }
-
     public int getContentType() {
         return contentType;
+    }
+
+    public void setContentType(int contentType) {
+        this.contentType = contentType;
     }
 
     protected TvshowsResponse(Parcel in) {
@@ -143,10 +119,6 @@ public class TvshowsResponse implements Parcelable {
             return new TvshowsResponse[size];
         }
     };
-
-    public void setContentType(int contentType) {
-        this.contentType = contentType;
-    }
 
     @Override
     public int describeContents() {
