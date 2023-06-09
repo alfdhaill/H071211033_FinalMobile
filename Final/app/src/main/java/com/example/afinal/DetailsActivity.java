@@ -2,15 +2,12 @@ package com.example.afinal;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.example.afinal.database.ContentHelper;
-import com.example.afinal.database.DatabaseContract;
+import com.example.afinal.database.AppDatabase;
 import com.example.afinal.models.MoviesResponse;
 import com.example.afinal.models.TvshowsResponse;
 import com.google.android.material.snackbar.Snackbar;
@@ -26,8 +23,7 @@ public class DetailsActivity extends AppCompatActivity {
     public static final String EXTRA_TYPE = "extra_type";
     public static final String TYPE_MOVIE = "movie";
     public static final String TYPE_TV_SHOW = "tv_show";
-    private ContentHelper contentHelper;
-
+    private AppDatabase database;
     private MaterialTextView mtvTitle;
     private MaterialTextView mtvDate;
     private MaterialTextView mtvSynopsis;
@@ -50,9 +46,6 @@ public class DetailsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        contentHelper = ContentHelper.getInstance(getApplicationContext());
-        contentHelper.open();
-
         mtvTitle = findViewById(R.id.mtv_title);
         mtvDate = findViewById(R.id.mtv_date);
         mtvSynopsis = findViewById(R.id.mtv_synopsis);
@@ -61,6 +54,8 @@ public class DetailsActivity extends AppCompatActivity {
         ivPoster = findViewById(R.id.iv_poster);
         ivContentType = findViewById(R.id.iv_content_type);
         checkBox = findViewById(R.id.cb);
+
+        database = AppDatabase.getInstance(this);
 
         inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         outputFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault());
@@ -72,35 +67,25 @@ public class DetailsActivity extends AppCompatActivity {
         } else if (TYPE_TV_SHOW.equals(type)) {
             setupDetailsForTvShow();
         }
-
-        contentHelper.close();
     }
 
     private void setupDetailsForMovie() {
         MoviesResponse moviesResponse = getIntent().getParcelableExtra(TYPE_MOVIE);
         setMovieDetails(moviesResponse);
 
-        checkBox.setChecked(isContentSaved(moviesResponse.getId()));
+        checkBox.setChecked(database.moviesDao().isMovieExists(moviesResponse.getId()));
 
         checkBox.setOnClickListener(v -> {
             if (checkBox.isChecked()) {
 
-                if (saveMovie(moviesResponse) > 0) {
+                database.moviesDao().insert(moviesResponse);
 
-                    showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.is_added));
-                } else {
-
-                    showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.failed_add));
-                }
+                showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.is_added));
             } else {
 
-                if (deleteContent(moviesResponse.getId()) > 0) {
+                database.moviesDao().delete(moviesResponse);
 
-                    showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.is_removed));
-                } else {
-
-                    showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.failed_remove));
-                }
+                showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.is_removed));
             }
         });
     }
@@ -109,27 +94,19 @@ public class DetailsActivity extends AppCompatActivity {
         TvshowsResponse tvshowsResponse = getIntent().getParcelableExtra(TYPE_TV_SHOW);
         setTvshowsDetails(tvshowsResponse);
 
-        checkBox.setChecked(isContentSaved(tvshowsResponse.getId()));
+        checkBox.setChecked(database.tvshowsDao().isTvshowExists(tvshowsResponse.getId()));
 
         checkBox.setOnClickListener(v -> {
             if (checkBox.isChecked()) {
 
-                if (saveTvshow(tvshowsResponse) > 0) {
+                database.tvshowsDao().insert(tvshowsResponse);
 
-                    showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.is_added));
-                } else {
-
-                    showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.failed_add));
-                }
+                showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.is_added));
             } else {
 
-                if (deleteContent(tvshowsResponse.getId()) > 0) {
+                database.tvshowsDao().delete(tvshowsResponse);
 
-                    showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.is_removed));
-                } else {
-
-                    showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.failed_remove));
-                }
+                showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.is_removed));
             }
         });
     }
@@ -184,58 +161,6 @@ public class DetailsActivity extends AppCompatActivity {
         Glide.with(this)
                 .load(resourceId)
                 .into(imageView);
-    }
-
-    private boolean isContentSaved(int id) {
-        Cursor cursor = contentHelper.queryById(id);
-        int count = cursor.getCount();
-        cursor.close();
-        return count > 0;
-    }
-
-    private long saveMovie(MoviesResponse response) {
-        ContentValues values = getMoviesValues(response);
-
-        return contentHelper.insert(values);
-    }
-
-    private long saveTvshow(TvshowsResponse response) {
-        ContentValues values = getTvshowValues(response);
-
-        return contentHelper.insert(values);
-    }
-
-    private long deleteContent(int id) {
-
-        return contentHelper.deleteById(String.valueOf(id));
-    }
-
-    private ContentValues getMoviesValues(MoviesResponse response) {
-
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.ContentColumns.ID, response.getId());
-        values.put(DatabaseContract.ContentColumns.TITLE, response.getTitle());
-        values.put(DatabaseContract.ContentColumns.VOTE_AVERAGE, response.getVoteAverage());
-        values.put(DatabaseContract.ContentColumns.OVERVIEW, response.getSynopsis());
-        values.put(DatabaseContract.ContentColumns.RELEASE_YEAR, response.getReleaseYear());
-        values.put(DatabaseContract.ContentColumns.POSTER_PATH, response.getPosterPath());
-        values.put(DatabaseContract.ContentColumns.BACKDROP_PATH, response.getBackdropPath());
-        values.put(DatabaseContract.ContentColumns.CONTENT_TYPE, response.getContentType());
-        return values;
-    }
-
-    private ContentValues getTvshowValues(TvshowsResponse response) {
-
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.ContentColumns.ID, response.getId());
-        values.put(DatabaseContract.ContentColumns.TITLE, response.getName());
-        values.put(DatabaseContract.ContentColumns.VOTE_AVERAGE, response.getVoteAverage());
-        values.put(DatabaseContract.ContentColumns.OVERVIEW, response.getSynopsis());
-        values.put(DatabaseContract.ContentColumns.RELEASE_YEAR, response.getAirYear());
-        values.put(DatabaseContract.ContentColumns.POSTER_PATH, response.getPosterPath());
-        values.put(DatabaseContract.ContentColumns.BACKDROP_PATH, response.getBackdropPath());
-        values.put(DatabaseContract.ContentColumns.CONTENT_TYPE, response.getContentType());
-        return values;
     }
 
     private void showSnackbar(String message) {

@@ -1,4 +1,4 @@
-package com.example.afinal.movies;
+package com.example.afinal;
 
 import android.os.Bundle;
 
@@ -11,19 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.SearchView;
 
 import com.example.afinal.MainActivity;
 import com.example.afinal.R;
-import com.example.afinal.adapters.MoviesAdapter;
+import com.example.afinal.adapters.TvshowsAdapter;
 import com.example.afinal.apis.ApiConfig;
-import com.example.afinal.models.MoviesResponse;
-import com.example.afinal.responses.ListMoviesResponse;
+import com.example.afinal.models.TvshowsResponse;
+import com.example.afinal.responses.ListTvshowsResponse;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -34,15 +31,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MoviesFragment extends Fragment {
+public class TvshowsFragment extends Fragment {
 
-    private MoviesAdapter moviesAdapter;
+    TvshowsAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_movies, container, false);
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_t_v_shows, container, false);
     }
 
     @Override
@@ -51,48 +48,51 @@ public class MoviesFragment extends Fragment {
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
-            activity.getSupportActionBar().setTitle(getString(R.string.movies));
+
+            activity.getSupportActionBar().setTitle(getString(R.string.tv_shows));
         }
 
-        Call<ListMoviesResponse> call = ApiConfig.getApiService().
-                getMovies(MainActivity.language, 1);
-        List<MoviesResponse> moviesResponses = new ArrayList<>();
+        Call<ListTvshowsResponse> call = ApiConfig.getApiService().
+                getTvshows(MainActivity.language, 1);
+        List<TvshowsResponse> tvshowsResponses = new ArrayList<>();
 
         LinearProgressIndicator linearProgressIndicator = view.findViewById(R.id.lpi);
         MaterialTextView mtvNoInternet = view.findViewById(R.id.mtv_no_internet);
-        RecyclerView recyclerView = view.findViewById(R.id.rv_movies);
+        RecyclerView recyclerView = view.findViewById(R.id.rv_tv_shows);
         Button btnRetry = view.findViewById(R.id.btn_retry);
+
         recyclerView.setVisibility(View.INVISIBLE);
 
         btnRetry.setOnClickListener(v -> getActivity().recreate());
 
-        call.enqueue(new Callback<ListMoviesResponse>() {
+        call.enqueue(new Callback<ListTvshowsResponse>() {
             @Override
-            public void onResponse(@NonNull Call<ListMoviesResponse> call,
-                                   @NonNull Response<ListMoviesResponse> response) {
+            public void onResponse(@NonNull Call<ListTvshowsResponse> call,
+                                   @NonNull Response<ListTvshowsResponse> response) {
 
                 linearProgressIndicator.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
 
                 if (response.isSuccessful() && response.body() != null) {
 
-                    ListMoviesResponse listMoviesResponse = response.body();
-                    moviesResponses.addAll(listMoviesResponse.getMoviesData());
+                    ListTvshowsResponse listTvshowsResponse = response.body();
+                    tvshowsResponses.addAll(listTvshowsResponse.getTvshowsData());
                 }
 
-                moviesAdapter = new MoviesAdapter(moviesResponses);
+                adapter = new TvshowsAdapter(tvshowsResponses);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,
                         LinearLayoutManager.VERTICAL));
-                recyclerView.setAdapter(moviesAdapter);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
-            public void onFailure(@NonNull Call<ListMoviesResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ListTvshowsResponse> call, @NonNull Throwable t) {
 
                 mtvNoInternet.setVisibility(View.VISIBLE);
                 btnRetry.setVisibility(View.VISIBLE);
             }
         });
+
     }
 }

@@ -4,34 +4,44 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
+@Entity
 public class MoviesResponse implements Parcelable {
 
+    @PrimaryKey
     @SerializedName("id")
     private int id;
 
+    @ColumnInfo(name = "title")
     @SerializedName("title")
-    private final String title;
+    private String title;
 
+    @ColumnInfo(name = "vote_average")
     @SerializedName("vote_average")
     private Float voteAverage;
 
+    @ColumnInfo(name = "overview")
     @SerializedName("overview")
     private String synopsis;
 
+    @ColumnInfo(name = "release_date")
     @SerializedName("release_date")
-    private final String releaseYear;
+    private String releaseYear;
 
+    @ColumnInfo(name = "poster_path")
     @SerializedName("poster_path")
     private String posterPath;
 
+    @ColumnInfo(name = "backdrop_path")
     @SerializedName("backdrop_path")
     private String backdropPath;
 
-    private int db_id;
-
+    @ColumnInfo(name = "content_type")
     private int contentType;
 
     public MoviesResponse(int id, String title, Float voteAverage, String synopsis,
@@ -48,6 +58,70 @@ public class MoviesResponse implements Parcelable {
         this.contentType = contentType;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Float getVoteAverage() {
+        return voteAverage;
+    }
+
+    public void setVoteAverage(Float voteAverage) {
+        this.voteAverage = voteAverage;
+    }
+
+    public String getSynopsis() {
+        return synopsis;
+    }
+
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
+    }
+
+    public String getReleaseYear() {
+        return releaseYear;
+    }
+
+    public void setReleaseYear(String releaseYear) {
+        this.releaseYear = releaseYear;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
+    }
+
+    public int getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(int contentType) {
+        this.contentType = contentType;
+    }
+
     protected MoviesResponse(Parcel in) {
         id = in.readInt();
         title = in.readString();
@@ -61,7 +135,6 @@ public class MoviesResponse implements Parcelable {
         posterPath = in.readString();
         backdropPath = in.readString();
         contentType = in.readInt();
-        db_id = in.readInt();
     }
 
     public static final Creator<MoviesResponse> CREATOR = new Creator<MoviesResponse>() {
@@ -75,46 +148,6 @@ public class MoviesResponse implements Parcelable {
             return new MoviesResponse[size];
         }
     };
-
-    public int getDb_id() {
-        return db_id;
-    }
-
-    public void setDb_id(int db_id) {
-        this.db_id = db_id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public Float getVoteAverage() {
-        return voteAverage;
-    }
-
-    public String getSynopsis() {
-        return synopsis;
-    }
-
-    public String getReleaseYear() {
-        return releaseYear;
-    }
-
-    public String getPosterPath() {
-        return posterPath;
-    }
-
-    public String getBackdropPath() {
-        return backdropPath;
-    }
-
-    public int getContentType() {
-        return contentType;
-    }
 
     @Override
     public int describeContents() {
@@ -136,10 +169,5 @@ public class MoviesResponse implements Parcelable {
         dest.writeString(posterPath);
         dest.writeString(backdropPath);
         dest.writeInt(contentType);
-        dest.writeInt(db_id);
-    }
-
-    public void setContentType(int contentType) {
-        this.contentType = contentType;
     }
 }
