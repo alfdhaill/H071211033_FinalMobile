@@ -7,6 +7,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.afinal.adapters.FavoriteMoviesAdapter;
+import com.example.afinal.adapters.FavoriteTvshowsAdapter;
 import com.example.afinal.databases.AppDatabase;
 import com.example.afinal.models.MoviesResponse;
 import com.example.afinal.models.TvshowsResponse;
@@ -35,6 +37,9 @@ public class DetailsActivity extends AppCompatActivity {
 
     private SimpleDateFormat inputFormat;
     private SimpleDateFormat outputFormat;
+
+    FavoriteMoviesAdapter favoriteMoviesAdapter;
+    FavoriteTvshowsAdapter favoriteTvshowsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +84,13 @@ public class DetailsActivity extends AppCompatActivity {
             if (checkBox.isChecked()) {
 
                 database.moviesDao().insert(moviesResponse);
+                favoriteMoviesAdapter.notifyDataSetChanged();
 
                 showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.is_added));
             } else {
 
                 database.moviesDao().delete(moviesResponse);
+                favoriteMoviesAdapter.notifyDataSetChanged();
 
                 showSnackbar(moviesResponse.getTitle() + " " + getString(R.string.is_removed));
             }
@@ -100,11 +107,13 @@ public class DetailsActivity extends AppCompatActivity {
             if (checkBox.isChecked()) {
 
                 database.tvshowsDao().insert(tvshowsResponse);
+                favoriteTvshowsAdapter.notifyDataSetChanged();
 
                 showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.is_added));
             } else {
 
                 database.tvshowsDao().delete(tvshowsResponse);
+                favoriteTvshowsAdapter.notifyDataSetChanged();
 
                 showSnackbar(tvshowsResponse.getName() + " " + getString(R.string.is_removed));
             }

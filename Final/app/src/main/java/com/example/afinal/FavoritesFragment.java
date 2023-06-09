@@ -28,13 +28,13 @@ import java.util.concurrent.Executors;
 
 public class FavoritesFragment extends Fragment {
 
-    Handler handler;
-    ExecutorService executorService;
-    List<MoviesResponse> moviesResponses;
-    List<TvshowsResponse> tvshowsResponses;
-    FavoriteMoviesAdapter favoriteMoviesAdapter;
-    FavoriteTvshowsAdapter favoriteTvshowsAdapter;
-    AppDatabase database;
+    private Handler handler;
+    private ExecutorService executorService;
+    private List<MoviesResponse> moviesResponses;
+    private List<TvshowsResponse> tvshowsResponses;
+    private FavoriteMoviesAdapter favoriteMoviesAdapter;
+    private FavoriteTvshowsAdapter favoriteTvshowsAdapter;
+    private AppDatabase database;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,7 +76,7 @@ public class FavoritesFragment extends Fragment {
         });
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            
+
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
