@@ -49,7 +49,7 @@ public class TvshowsFragment extends Fragment {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
 
-            activity.getSupportActionBar().setTitle(getString(R.string.tv_shows));
+            activity.getSupportActionBar().setTitle(getString(R.string.top_rated));
         }
 
         Call<ListTvshowsResponse> call = ApiConfig.getApiService().

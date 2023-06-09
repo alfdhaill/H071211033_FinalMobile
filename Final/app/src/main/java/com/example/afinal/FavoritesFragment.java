@@ -55,7 +55,7 @@ public class FavoritesFragment extends Fragment {
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
-            activity.getSupportActionBar().setTitle(getString(R.string.favorites));
+            activity.getSupportActionBar().hide();
         }
 
         TabLayout tabLayout = view.findViewById(R.id.tl);

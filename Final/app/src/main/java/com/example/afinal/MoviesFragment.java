@@ -51,7 +51,7 @@ public class MoviesFragment extends Fragment {
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
-            activity.getSupportActionBar().setTitle(getString(R.string.movies));
+            activity.getSupportActionBar().setTitle(getString(R.string.now_playing));
         }
 
         Call<ListMoviesResponse> call = ApiConfig.getApiService().
