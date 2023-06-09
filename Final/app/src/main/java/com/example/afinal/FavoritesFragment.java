@@ -66,36 +66,60 @@ public class FavoritesFragment extends Fragment {
 
         database = AppDatabase.getInstance(FavoritesFragment.this.getContext());
 
+        // Load initial data for first tab
+        executorService.execute(() -> {
+            moviesResponses = database.moviesDao().getAll();
+            handler.post(() -> {
+                favoriteMoviesAdapter = new FavoriteMoviesAdapter(moviesResponses);
+                recyclerView.setAdapter(favoriteMoviesAdapter);
+            });
+        });
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
                 int position = tab.getPosition();
 
                 if (position == 0) {
+                    // Only load data if it hasn't been loaded before
+                    if (moviesResponses == null) {
 
-                    executorService.execute(() -> {
+                        executorService.execute(() -> {
 
-                        moviesResponses = database.moviesDao().getAll();
+                            moviesResponses = database.moviesDao().getAll();
 
-                        handler.post(() -> {
+                            handler.post(() -> {
 
-                            favoriteMoviesAdapter = new FavoriteMoviesAdapter(moviesResponses);
-                            recyclerView.setAdapter(favoriteMoviesAdapter);
+                                favoriteMoviesAdapter = new FavoriteMoviesAdapter(moviesResponses);
+                                recyclerView.setAdapter(favoriteMoviesAdapter);
+                            });
                         });
-                    });
+                    } else {
+
+                        favoriteMoviesAdapter = new FavoriteMoviesAdapter(moviesResponses);
+                        recyclerView.setAdapter(favoriteMoviesAdapter);
+                    }
                 } else if (position == 1) {
 
-                    executorService.execute(() -> {
+                    if (tvshowsResponses == null) {
+                        // Only load data if it hasn't been loaded before
+                        executorService.execute(() -> {
 
-                        tvshowsResponses = database.tvshowsDao().getAll();
+                            tvshowsResponses = database.tvshowsDao().getAll();
 
-                        handler.post(() -> {
+                            handler.post(() -> {
 
-                            favoriteTvshowsAdapter = new FavoriteTvshowsAdapter(tvshowsResponses);
-                            recyclerView.setAdapter(favoriteTvshowsAdapter);
+                                favoriteTvshowsAdapter = new FavoriteTvshowsAdapter(tvshowsResponses);
+                                recyclerView.setAdapter(favoriteTvshowsAdapter);
+                            });
                         });
-                    });
+                    } else {
+
+                        favoriteTvshowsAdapter = new FavoriteTvshowsAdapter(tvshowsResponses);
+                        recyclerView.setAdapter(favoriteTvshowsAdapter);
+                    }
                 }
             }
 
