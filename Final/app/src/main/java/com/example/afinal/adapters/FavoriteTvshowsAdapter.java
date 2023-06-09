@@ -50,6 +50,7 @@ public class FavoriteTvshowsAdapter extends RecyclerView
                 .into(holder.ivPoster);
 
         holder.tvName.setText(tvshowsResponse.getName());
+        holder.ivContentType.setImageResource(tvshowsResponse.getContentType());
 
         if (releaseYear != null && releaseYear.length() >= 4) {
             String year = releaseYear.substring(0, 4);
