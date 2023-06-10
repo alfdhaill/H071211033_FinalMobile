@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.afinal.DetailsActivity;
 import com.example.afinal.R;
+import com.example.afinal.models.MoviesResponse;
 import com.example.afinal.models.TvshowsResponse;
 import com.google.android.material.card.MaterialCardView;
 
@@ -20,10 +21,16 @@ import java.util.List;
 
 public class TvshowsAdapter extends RecyclerView.Adapter<TvshowsAdapter.TvshowsViewHolder> {
 
-    private final List<TvshowsResponse> tvshowsResponses;
+    private List<TvshowsResponse> tvshowsResponses;
 
     public TvshowsAdapter(List<TvshowsResponse> tvshowsResponses) {
         this.tvshowsResponses = tvshowsResponses;
+    }
+
+    public void updateTvshowsData(List<TvshowsResponse> newData) {
+
+        this.tvshowsResponses = newData;
+        notifyDataSetChanged();
     }
 
     @NonNull

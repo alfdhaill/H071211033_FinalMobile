@@ -15,16 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.afinal.MainActivity;
-import com.example.afinal.R;
 import com.example.afinal.adapters.TvshowsAdapter;
 import com.example.afinal.apis.ApiConfig;
 import com.example.afinal.models.TvshowsResponse;
 import com.example.afinal.responses.ListTvshowsResponse;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -46,25 +46,22 @@ public class TvshowsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        if (activity != null) {
-
-            activity.getSupportActionBar().show();
-            activity.getSupportActionBar().setTitle(getString(R.string.top_rated));
-        }
+        AppCompatActivity activity = (AppCompatActivity) requireActivity();
+        activity.getSupportActionBar().show();
+        activity.getSupportActionBar().setTitle(getString(R.string.top_rated));
 
         Call<ListTvshowsResponse> call = ApiConfig.getApiService().
                 getTvshows(MainActivity.language, 1);
-        List<TvshowsResponse> tvshowsResponses = new ArrayList<>();
+        final List<TvshowsResponse> tvshowsResponses = new ArrayList<>();
 
         LinearProgressIndicator linearProgressIndicator = view.findViewById(R.id.lpi);
         MaterialTextView mtvNoInternet = view.findViewById(R.id.mtv_no_internet);
         RecyclerView recyclerView = view.findViewById(R.id.rv_tv_shows);
         Button btnRetry = view.findViewById(R.id.btn_retry);
+        MaterialButtonToggleGroup materialButtonToggleGroup = view.findViewById(R.id.toggleButton);
 
-        recyclerView.setVisibility(View.INVISIBLE);
-
-        btnRetry.setOnClickListener(v -> getActivity().recreate());
+        materialButtonToggleGroup.check(R.id.button2);
+        btnRetry.setOnClickListener(v -> requireActivity().recreate());
 
         call.enqueue(new Callback<ListTvshowsResponse>() {
             @Override
@@ -73,6 +70,7 @@ public class TvshowsFragment extends Fragment {
 
                 linearProgressIndicator.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
+                materialButtonToggleGroup.setVisibility(View.VISIBLE);
 
                 if (response.isSuccessful() && response.body() != null) {
 
@@ -80,10 +78,38 @@ public class TvshowsFragment extends Fragment {
                     tvshowsResponses.addAll(listTvshowsResponse.getTvshowsData());
                 }
 
+                List<TvshowsResponse> defaultTvshowsResponses = new ArrayList<>(tvshowsResponses);
                 adapter = new TvshowsAdapter(tvshowsResponses);
+
+                materialButtonToggleGroup.addOnButtonCheckedListener
+                        ((group, checkedId, isChecked) -> {
+
+                            if (isChecked) {
+
+                                if (checkedId == R.id.button1) {
+
+                                    // Sort titles in ascending order
+                                    tvshowsResponses.sort(Comparator
+                                            .comparing(TvshowsResponse::getName));
+                                } else if (checkedId == R.id.button2) {
+
+                                    // Set to default order
+                                    tvshowsResponses.clear();
+                                    tvshowsResponses.addAll(defaultTvshowsResponses);
+                                } else if (checkedId == R.id.button3) {
+
+                                    // Sort titles in descending order
+                                    tvshowsResponses.sort((o1, o2) -> o2.getName()
+                                            .compareTo(o1.getName()));
+                                }
+
+                                adapter.updateTvshowsData(tvshowsResponses);
+                            }
+                        });
+
                 recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,
-                        LinearLayoutManager.VERTICAL));
+                recyclerView.setLayoutManager(new StaggeredGridLayoutManager
+                        (2, LinearLayoutManager.VERTICAL));
                 recyclerView.setAdapter(adapter);
             }
 

@@ -20,12 +20,18 @@ import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder>{
 
-    private final List<MoviesResponse> moviesResponses;
+    private List<MoviesResponse> moviesResponses;
 
     public MoviesAdapter(List<MoviesResponse> moviesResponses) {
+
         this.moviesResponses = moviesResponses;
     }
 
+    public void updateMoviesData(List<MoviesResponse> newData) {
+
+        this.moviesResponses = newData;
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
